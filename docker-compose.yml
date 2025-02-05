@@ -1,0 +1,41 @@
+
+services:
+  app:
+    build: .
+    container_name: my_actix_app
+    env_file: .env
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    depends_on:
+      - db
+      - redis
+    restart: on-failure
+
+  db:
+    image: postgres:13
+    container_name: my_actix_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-username}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-my_actix_project}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER:-username}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:6
+    container_name: my_actix_redis
+    ports:
+      - "6379:6379"
+    restart: always
+
+volumes:
+  postgres_data:
+

@@ -1,0 +1,9 @@
+[package]
+name = "my_actix_project"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+dotenv = "0.15.0"
+envy = "0.4.2"
+serde = { version = "1.0.217", features = ["derive"] }
